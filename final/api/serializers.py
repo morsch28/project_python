@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from api.models import Comment,UserProfile,Post,Tag,PostUserLikes
+from api.models import Comment,UserProfile,Article,Tag,ArticleUserLikes
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
 from rest_framework import serializers
@@ -66,11 +66,11 @@ class UserProfileSerializer(ModelSerializer):
         return obj.user.id   
 
         
-class PostSerializer(ModelSerializer):
+class ArticleSerializer(ModelSerializer):
     author = HiddenField(default = CurrentProfileDefault())
     author_id = SerializerMethodField("get_author_id")
     class Meta:
-        model = Post
+        model = Article
         fields = "__all__"
     
     def get_author_id(self,obj):
@@ -81,8 +81,8 @@ class TagSerializer(ModelSerializer):
         model = Tag
         fields = "__all__"
         
-class PostUserLikesSerializer(ModelSerializer):
+class ArticleUserLikesSerializer(ModelSerializer):
     class Meta:
-        model = PostUserLikes
+        model = ArticleUserLikes
         fields = "__all__"        
     

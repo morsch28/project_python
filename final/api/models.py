@@ -30,7 +30,7 @@ STATUS_CHOICES = [
 ]
     
 
-class Post(models.Model):
+class Article(models.Model):
     author = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
     title = models.CharField(max_length=100,unique=True,validators=[
         MinLengthValidator(5),
@@ -41,6 +41,8 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(choices=STATUS_CHOICES,default='draft')
+    image = models.URLField(null=True, blank=True)
+
     
     def __str__(self):
         return f"{self.title} by {self.author.user.username}"
@@ -48,7 +50,7 @@ class Post(models.Model):
     
 class Comment(models.Model):
     author = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
-    post = models.ForeignKey(Post,on_delete=models.CASCADE)
+    article = models.ForeignKey(Article,on_delete=models.CASCADE)
     text = models.TextField(validators=[MinLengthValidator(1)],max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -62,16 +64,16 @@ LIKE_CHOICES = [
     ('dislike','Dislike')
 ]
 
-class PostUserLikes(models.Model):
+class ArticleUserLikes(models.Model):
     user = models.ForeignKey(UserProfile,on_delete=models.CASCADE)
-    post =  models.ForeignKey(Post,on_delete=models.CASCADE)
+    article  =  models.ForeignKey(Article,on_delete=models.CASCADE)
     like_type = models.CharField(choices=LIKE_CHOICES,default='like')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     # prevent users from liking twice
     class Meta:
-        unique_together = ['user','post']
+        unique_together = ['user','article']
         
     def __str__(self):
         return f"{self.user.user.username} {self.like_type} {self.post.title}"

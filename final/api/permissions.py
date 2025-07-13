@@ -31,7 +31,7 @@ class CommentOwnerOrReadOnly(permissions.BasePermission):
         
         return False
 
-class PostPermission(permissions.BasePermission):
+class ArticlePermission(permissions.BasePermission):
     # regular user can only view
     # admin can also edit and delete
     
@@ -43,7 +43,7 @@ class PostPermission(permissions.BasePermission):
         
         return request.user.is_superuser  or request.user.is_staff
     
-class TagPermission(PostPermission):
+class TagPermission(ArticlePermission):
     """
     Allow admin to write Tags, all users can read
     """
